@@ -1,7 +1,5 @@
-@echo off
+#!/bin/sh
 
-setlocal
-
-cd "%~dp0"
+cd "$( dirname "$0" )"
 
 7za a hosts.zip userdata/start.tpl.bat modules/system/html/openserver/index.php

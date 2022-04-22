@@ -44,6 +44,8 @@ ENVIRONMENT
 * `powershell` or `wmic` (shipped with Windows; the first found is used) to display the status
 * `wget` (shipped with Open Server) to start, stop and restart servers
 
-The commands `start`, `stop` and `restart` require __Web management__ enabled in Settings:
+The commands `start`, `stop` and `restart` require __Web management__ enabled in Settings.
+
+The rest of parameters in this section (Login, Password, and Port) are free for modification on your choice.
 
 ![](settings-other.jpg)

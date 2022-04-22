@@ -2,6 +2,12 @@
 
 It is a command line tool to provide a control over Open Server.
 
+It can be placed under any convenient for you directory. It detects automatically how and where it is executed and depending on that the script looks for the Open Server executable and performs a particular action.
+
+A directory specified with the `-d` option has a higher priority and is checked and used unconditionally. Otherwise, the `OSP_HOME` environment variable is checked. Finally, if none from above is specified, the current directory or the directory where the script lives is used.
+
+All explained above allows to use the script in flexible way. For example, you can put the script so it can be available via `PATH` and run it being somewhere within the Open Server directory hierarchy.
+
 ## Usage
 
 ```

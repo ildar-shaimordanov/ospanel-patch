@@ -26,8 +26,6 @@
 
 @echo off
 
-if "%~1" == "" goto :print_usage
-
 setlocal
 
 set "OSP_NAME=Open Server.exe"
@@ -38,15 +36,20 @@ if /i "%~1" == "-v" (
 	shift /1
 )
 
-if not defined OSP_HOME set "OSP_HOME=%~dp0"
-
 if /i "%~1" == "-d" (
 	set "OSP_HOME=%~2"
 	shift /1
 	shift /1
 )
 
-set "OSP_HOME=" & call :detect "%OSP_HOME%"
+if "%~1" == "" goto :print_usage
+
+if defined OSP_HOME (
+	set "OSP_HOME=" & call :detect "%OSP_HOME%"
+) else (
+	call :detect "%CD%"
+	if not defined OSP_HOME if "%CD%\." neq "%~dp0." call :detect "%~dp0"
+)
 
 if not defined OSP_HOME (
 	call :warn "%OSP_NAME% not found"
@@ -80,18 +83,21 @@ goto :EOF
 :: ========================================================================
 
 :run
-start "%OSP_NAME% running..." /b "%OSP_HOME%\%OSP_NAME%"
+echo:Running...
+start "Running..." /b "%OSP_HOME%\%OSP_NAME%"
 goto :EOF
 
 :: ========================================================================
 
 :kill
+echo:Terminating...
 taskkill /fi "IMAGENAME EQ %OSP_NAME%"
 goto :EOF
 
 :: ========================================================================
 
 :force-kill
+echo:Killing...
 taskkill /f /fi "IMAGENAME EQ %OSP_NAME%"
 goto :EOF
 
@@ -128,7 +134,7 @@ call :warn "Unable to display status"
 goto :EOF
 
 :status_powershell
-powershell -c "gwmi Win32_Process|?{$_.Caption -eq '%OSP_NAME%'}|%% {($p=$_.ProcessId),$_.CommandLine,''}; if(!$p){exit} gwmi Win32_Process|?{$_.ParentProcessId -eq $p}|%% {$_.ProcessId,$_.CommandLine,''}"
+powershell -c "gwmi Win32_Process|?{$_.Caption -eq '%OSP_NAME%'}|%% {($p=$_.ProcessId),$_.CommandLine,''}; if($p){gwmi Win32_Process|?{$_.ParentProcessId -eq $p}|%% {$_.ProcessId,$_.CommandLine,''}}"
 goto :EOF
 
 :status_wmic
